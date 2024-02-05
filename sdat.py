@@ -3,6 +3,8 @@ Scrape a page from State Department of Assessment and Taxation (SDAT) site to ob
 find basic owner and transfer information.
 """
 
+from urllib.parse import urlencode
+
 import requests
 from bs4 import BeautifulSoup, element as bs4_element
 
@@ -128,9 +130,30 @@ class ScrapeSDAT:
         print(transfer_info)
 
 
-if __name__ == '__main__':
+def main():
+    """Main function."""
+    raw_data = {
+        'search_type': 'ACCT',
+        'county': 3,
+        'ward': 16,
+        'section': 10,
+        'block': 97,
+        'lot': 54,
+    }
+    query_parameters = {
+        'search_type': 'ACCT',
+        'county': f"{raw_data['county']:02}",
+        'ward': f"{raw_data['ward']:02}",
+        'section': f"{raw_data['section']:02}",
+        'block': f"{raw_data['block']:04}",
+        'lot': f"{raw_data['lot']:03}",
+    }
+
     base_url = "https://sdat.dat.maryland.gov/RealProperty/Pages/viewdetails.aspx"
-    sdat_property_url = f"{base_url}?County=03&SearchType=ACCT&Ward=16&Section=10&Block=0097%20&Lot=054"
+    sdat_property_url =  f"{base_url}?{urlencode(query_parameters)}"
     scraper = ScrapeSDAT()
     scraper.scrape(sdat_property_url)
 
+
+if __name__ == '__main__':
+    main()
