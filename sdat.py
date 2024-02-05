@@ -1,6 +1,6 @@
 """
 Scrape a page from State Department of Assessment and Taxation (SDAT) site to obtain
-find basic owner and transfer information.
+find basic owner and transfer information.  Use CLI to provide arguments for the search.
 """
 
 import argparse
