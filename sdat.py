@@ -3,6 +3,7 @@ Scrape a page from State Department of Assessment and Taxation (SDAT) site to ob
 find basic owner and transfer information.
 """
 
+import argparse
 from urllib.parse import urlencode
 
 import requests
@@ -130,25 +131,29 @@ class ScrapeSDAT:
         print(transfer_info)
 
 
+def argument_factory():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--search_type', type=str, default='ACCT')
+    parser.add_argument('--county', type=int, default=3)
+    parser.add_argument('--ward', type=int, default=16)
+    parser.add_argument('--section', type=int, default=10)
+    parser.add_argument('--block', type=int, default=97)
+    parser.add_argument('--lot', type=int, default=54)
+    return parser
+
+
 def main():
     """Main function."""
-    raw_data = {
-        'search_type': 'ACCT',
-        'county': 3,
-        'ward': 16,
-        'section': 10,
-        'block': 97,
-        'lot': 54,
-    }
+    parser = argument_factory()
+    args = parser.parse_args()
     query_parameters = {
-        'search_type': 'ACCT',
-        'county': f"{raw_data['county']:02}",
-        'ward': f"{raw_data['ward']:02}",
-        'section': f"{raw_data['section']:02}",
-        'block': f"{raw_data['block']:04}",
-        'lot': f"{raw_data['lot']:03}",
+        'search_type': args.search_type,
+        'county': f"{args.county:02}",
+        'ward': f"{args.ward:02}",
+        'section': f"{args.section:02}",
+        'block': f"{args.block:04}",
+        'lot': f"{args.lot:03}",
     }
-
     base_url = "https://sdat.dat.maryland.gov/RealProperty/Pages/viewdetails.aspx"
     sdat_property_url =  f"{base_url}?{urlencode(query_parameters)}"
     scraper = ScrapeSDAT()
